@@ -64,5 +64,17 @@ namespace ParkFinder.Controllers
             else
                 return NoContent();
         }
+
+        [HttpGet]
+        [Route("near")]
+        public async Task<ActionResult<ParkModel>> FindNear([FromQuery]double longitude, [FromQuery]double latitude, [FromQuery]double threshold)
+        {
+            var results = await _service.FindNear(longitude, latitude, threshold);
+
+            if (results == null)
+                return NotFound();
+            else
+                return Ok(results);
+        }
     }
 }

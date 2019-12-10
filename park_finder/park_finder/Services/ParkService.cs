@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using MongoDB.Driver;
+using MongoDB.Bson;
+
 using ParkFinder.Models;
 
 namespace ParkFinder.Services
@@ -14,6 +16,8 @@ namespace ParkFinder.Services
         Task<ParkModel> Retrieve(Guid guid);
         Task<ParkModel> Update(Guid guid, ParkModel park);
         Task<ParkModel> Delete(Guid guid);
+
+        Task<List<ParkModel>> FindNear(double longitude, double latitude, double threshold);
     }
 
     public class ParkService : IParkService
@@ -32,7 +36,7 @@ namespace ParkFinder.Services
             {
                 park.Id = Guid.NewGuid().ToString();
                 await _collection.InsertOneAsync(park);
-                
+
                 return park;
             }
             catch
@@ -65,6 +69,25 @@ namespace ParkFinder.Services
         {
             var filterDefinition = Builders<ParkModel>.Filter.Eq("_id", guid.ToString());
             return await _collection.FindOneAndDeleteAsync(filterDefinition);
+        }
+
+        public async Task<List<ParkModel>> FindNear(double longitude, double latitude, double threshold)
+        {
+            var pipeline = new List<BsonDocument>()
+            {
+                new BsonDocument("$geoNear", new BsonDocument{
+                { "near", new BsonDocument
+                {
+                    { "type", "Point" },
+                    { "coordinates", new BsonArray{ longitude, latitude } }
+                } },
+                { "distanceField", "distance" },
+                { "maxDistance", threshold },
+                { "spherical", true }
+                })
+            };
+
+            return (await _collection.AggregateAsync((PipelineDefinition<ParkModel, ParkModel>)pipeline)).ToList();
         }
     }
 }

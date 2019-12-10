@@ -7,6 +7,7 @@ using ParkFinder.Serializers;
 
 namespace ParkFinder.Models
 {
+    [BsonIgnoreExtraElements]
     public class ParkModel
     {
         [BsonId]
