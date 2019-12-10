@@ -1,0 +1,8 @@
+{"_id": "24e0a2e4-29b5-3fda-a20f-cb0d28e2a23f", "name": "Truck Stops", "style": {"icon": "truck", "shape": "circle", "color": "#D35400"}}
+{"_id": "e1372f54-b5bb-3374-9a19-f2e9b67a82e3", "name": "Cat Scales", "style": {"icon": "catscale", "shape": "circle", "color": "#FAC62A"}}
+{"_id": "bf1b34b2-d053-35f1-86df-ecb9958abaac", "name": "Weigh Stations", "style": {"icon": "weight_station", "shape": "circle", "color": "#D35400"}}
+{"_id": "6cb5bede-1786-3600-b9ec-0c06d6d25066", "name": "LCV Lots", "style": {"icon": "tandemtrailer", "shape": "circle", "color": "#D35400"}}
+{"_id": "b0d74664-1729-318c-86d7-06e185f5514b", "name": "Distribution Centers", "style": {"icon": "distribution_center", "shape": "circle", "color": "#A64F37"}}
+{"_id": "0a6e9174-1a6a-3f87-b9ac-9deaa98c0293", "name": "Overnight Parking", "style": {"icon": "walmart_parking", "shape": "circle", "color": "#0971CE"}}
+{"_id": "788aa0b4-25f3-33da-8a6d-7a1a5b0a598c", "name": "Manufacturing Plants", "style": {"icon": "manufacturing_plant", "shape": "circle", "color": "#A64F37"}}
+{"_id": "cbae1bd4-3599-390f-a44e-923ce55ee678", "name": "Intermodal Terminals", "style": {"icon": "intermodal_ramp", "shape": "circle", "color": "#A64F37"}}
