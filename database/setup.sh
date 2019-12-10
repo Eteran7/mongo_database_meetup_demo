@@ -3,7 +3,7 @@ mongoimport --db meetup --collection park --file /app/park_data.json
 mongoimport --db meetup --collection park --mode merge --file /app/geometry_data.json
 
 echo Creating database user...
-mongo meetup --eval "db.createUser({'user': '$MONGO_USERNAME', 'pwd': '$MONGO_PASSWORD', 'roles': [{'role': 'read', 'db':'meetup'}]})"
+mongo meetup --eval "db.createUser({'user': '$MONGO_USERNAME', 'pwd': '$MONGO_PASSWORD', 'roles': [{'role': 'readWrite', 'db':'meetup'}]})"
 
 echo Creating index on name...
 mongo meetup --eval "db.park.createIndex({'name':1}, {name: 'name_index'})"
