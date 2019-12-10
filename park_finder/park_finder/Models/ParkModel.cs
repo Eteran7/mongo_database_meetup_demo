@@ -22,6 +22,7 @@ namespace ParkFinder.Models
         [JsonProperty("address")]
         public AddressModel Address { get; set; }
 
+        [BsonIgnoreIfNull]
         [BsonElement("geometry")]
         [JsonProperty("geometry")]
         [JsonConverter(typeof(MongoGeoJsonConverter<GeoJsonMultiPolygon<GeoJson2DGeographicCoordinates>>))]

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,16 +18,51 @@ namespace ParkFinder.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        [Route("guid")]
-        public async Task<ActionResult<List<ParkModel>>> RetrieveByGuids([FromQuery]Guid[] guid)
+        [HttpPost]
+        public async Task<ActionResult<ParkModel>> Create([FromBody]ParkModel park)
         {
-            var parks = await _service.RetrieveByGuids(guid);
-
-            if (parks.Any())
-                return Ok(parks);
+            var result = await _service.Create(park);
+            if (result == null)
+            {
+                return BadRequest("Failed to create new park!");
+            }
             else
+            {
+                return CreatedAtAction(nameof(Retrieve), new { guid = park.Id }, result);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<ParkModel>> Retrieve([FromQuery]Guid guid)
+        {
+            var result = await _service.Retrieve(guid);
+
+            if (result == null)
                 return NotFound();
+            else
+                return Ok(result);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<ParkModel>> Update([FromQuery]Guid guid, [FromBody]ParkModel park)
+        {
+            var result = await _service.Update(guid, park);
+
+            if (result == null)
+                return NotFound();
+            else
+                return Ok(result);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult<ParkModel>> Delete([FromQuery]Guid guid)
+        {
+            var result = await _service.Delete(guid);
+
+            if (result == null)
+                return NotFound();
+            else
+                return NoContent();
         }
     }
 }

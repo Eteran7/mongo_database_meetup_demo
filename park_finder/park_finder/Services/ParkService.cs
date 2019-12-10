@@ -4,15 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using MongoDB.Driver;
-using MongoDB.Driver.GeoJsonObjectModel;
-
 using ParkFinder.Models;
 
 namespace ParkFinder.Services
 {
     public interface IParkService
     {
-        Task<List<ParkModel>> RetrieveByGuids(Guid[] guids);
+        Task<ParkModel> Create(ParkModel park);
+        Task<ParkModel> Retrieve(Guid guid);
+        Task<ParkModel> Update(Guid guid, ParkModel park);
+        Task<ParkModel> Delete(Guid guid);
     }
 
     public class ParkService : IParkService
@@ -25,10 +26,45 @@ namespace ParkFinder.Services
             _collection = database.GetCollection<ParkModel>("park");
         }
 
-        public async Task<List<ParkModel>> RetrieveByGuids(Guid[] guids)
+        public async Task<ParkModel> Create(ParkModel park)
         {
-            var filterDefinition = Builders<ParkModel>.Filter.AnyIn("_id", guids.Select(guid => guid.ToString()));
-            return (await _collection.FindAsync(filterDefinition)).ToList();
+            try
+            {
+                park.Id = Guid.NewGuid().ToString();
+                await _collection.InsertOneAsync(park);
+                
+                return park;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<ParkModel> Retrieve(Guid guid)
+        {
+            var filterDefinition = Builders<ParkModel>.Filter.Eq("_id", guid.ToString());
+            return (await _collection.FindAsync(filterDefinition)).FirstOrDefault();
+        }
+
+        public async Task<ParkModel> Update(Guid guid, ParkModel park)
+        {
+            var updateOptions = new FindOneAndUpdateOptions<ParkModel>()
+            {
+                ReturnDocument = ReturnDocument.After
+            };
+
+            var filterDefinition = Builders<ParkModel>.Filter.Eq("_id", guid.ToString());
+            var updateDefinition = Builders<ParkModel>.Update.Set("name", park.Name).
+                                                              Set("address", park.Address);
+
+            return await _collection.FindOneAndUpdateAsync(filterDefinition, updateDefinition, updateOptions);
+        }
+
+        public async Task<ParkModel> Delete(Guid guid)
+        {
+            var filterDefinition = Builders<ParkModel>.Filter.Eq("_id", guid.ToString());
+            return await _collection.FindOneAndDeleteAsync(filterDefinition);
         }
     }
 }
